@@ -1,0 +1,20 @@
+{
+  "name": "qremo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "couchbase": "^4.4.4",
+    "express": "^4.21.2",
+    "express-csp-header": "^6.0.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.12.0"
+  }
+}
