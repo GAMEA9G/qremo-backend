@@ -1,0 +1,45 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Syllabus {
+  id        Int      @id @default(autoincrement())
+  syllabus  String
+  subjects  Subject[]
+}
+
+model Subject {
+  id         Int       @id @default(autoincrement())
+  subject_name String
+  syllabusId Int
+  syllabus   Syllabus @relation(fields: [syllabusId], references: [id])
+  topics     Chapter[]
+}
+
+model Chapter {
+  id         Int       @id @default(autoincrement())
+  Chapter_name String
+  ChapterId Int
+  Subject   Subject @relation(fields: [ChapterId], references: [id])
+  topics     Topic[]
+}
+model Topic {
+  id        Int      @id @default(autoincrement())
+  topic     String
+  ChapterId Int
+  Chapter   Chapter @relation(fields: [ChapterId], references: [id])
+  questions Question[]
+}
+
+model Question {
+  id        Int     @id @default(autoincrement())
+  question  String
+  answer    String
+  topicId   Int
+  topic     Topic   @relation(fields: [topicId], references: [id])
+}
