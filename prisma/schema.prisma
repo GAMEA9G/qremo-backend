@@ -1,45 +1,86 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  name String 
+  
+}
+model Syllabus {
+  id Int @id @default(autoincrement())
+  name String @unique
+  Subjects Subjects[]
+}
+model Subjects {
+  id Int @id @default(autoincrement())
+  name String 
+  SyllabusId Int
+  
+
+  Syllabus Syllabus @relation(fields: [SyllabusId],references: [id])
+  Topic Chapter[]
+}
+model Chapter {
+  id Int @id @default(autoincrement())
+  name String
+  SubjectId Int
+  Subjects Subjects @relation(fields: [SubjectId],references: [id])
+  topic Topic[]
+  quiz Quiz[]
+  notes Notes[]
+}
+model Notes {
+  id Int @id @default(autoincrement())
+  name String
+  Author String
+  Date DateTime
+  ChapterId Int
+  Chapter Chapter @relation(fields: [ChapterId],references: [id])
+}
+model Quiz {
+  id Int @id @default(autoincrement())
+  name String
+  ChapterId Int
+  Chapter Chapter @relation(fields: [ChapterId],references: [id])
+  QandA QandA_quiz[]
+}
+model QandA_quiz {
+  id Int @id
+  Question String
+  Option1 String
+  Option2 String
+  Option3 String
+  Option4 String
+  Answer String
+  QuizId Int
+  Quiz Quiz @relation(fields: [QuizId],references: [id])
+}
+model Topic {
+  id Int @id @default(autoincrement())
+  name String
+
+  ChapterId Int
+  Chapter Chapter @relation(fields: [ChapterId],references: [id])
+  QandA QandA[]
+}
+model QandA {
+  id Int @id
+  Question String
+  Option1 String
+  Option2 String
+  Option3 String
+  Option4 String
+  Answer String
+  TopicId Int
+  Topic Topic @relation(fields: [TopicId],references: [id])
 }
 
 generator client {
   provider = "prisma-client-js"
+  output = "../generated/prisma"
 }
 
-model Syllabus {
-  id        Int      @id @default(autoincrement())
-  syllabus  String
-  subjects  Subject[]
-}
-
-model Subject {
-  id         Int       @id @default(autoincrement())
-  subject_name String
-  syllabusId Int
-  syllabus   Syllabus @relation(fields: [syllabusId], references: [id])
-  topics     Chapter[]
-}
-
-model Chapter {
-  id         Int       @id @default(autoincrement())
-  Chapter_name String
-  ChapterId Int
-  Subject   Subject @relation(fields: [ChapterId], references: [id])
-  topics     Topic[]
-}
-model Topic {
-  id        Int      @id @default(autoincrement())
-  topic     String
-  ChapterId Int
-  Chapter   Chapter @relation(fields: [ChapterId], references: [id])
-  questions Question[]
-}
-
-model Question {
-  id        Int     @id @default(autoincrement())
-  question  String
-  answer    String
-  topicId   Int
-  topic     Topic   @relation(fields: [topicId], references: [id])
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
