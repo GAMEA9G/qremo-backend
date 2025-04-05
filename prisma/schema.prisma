@@ -1,86 +1,93 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 model User {
-  id Int @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   email String @unique
-  name String 
-  
+  name  String
 }
+
 model Syllabus {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
   Subjects Subjects[]
 }
+
 model Subjects {
-  id Int @id @default(autoincrement())
-  name String 
+  id         Int    @id @default(autoincrement())
+  name       String
   SyllabusId Int
-  
 
-  Syllabus Syllabus @relation(fields: [SyllabusId],references: [id])
-  Topic Chapter[]
+  Syllabus Syllabus  @relation(fields: [SyllabusId], references: [id])
+  Topic    Chapter[]
 }
+
 model Chapter {
-  id Int @id @default(autoincrement())
-  name String
+  id        Int      @id @default(autoincrement())
+  name      String
   SubjectId Int
-  Subjects Subjects @relation(fields: [SubjectId],references: [id])
-  topic Topic[]
-  quiz Quiz[]
-  notes Notes[]
+  Subjects  Subjects @relation(fields: [SubjectId], references: [id])
+  topic     Topic[]
+  quiz      Quiz[]
+  notes     Notes[]
 }
+
 model Notes {
-  id Int @id @default(autoincrement())
-  name String
-  Author String
-  Date DateTime
+  id        Int      @id @default(autoincrement())
+  name      String
+  link      String
+  Author    String
+  Date      DateTime
   ChapterId Int
-  Chapter Chapter @relation(fields: [ChapterId],references: [id])
+  Chapter   Chapter  @relation(fields: [ChapterId], references: [id])
 }
+
 model Quiz {
-  id Int @id @default(autoincrement())
-  name String
+  id        Int          @id @default(autoincrement())
+  name      String
   ChapterId Int
-  Chapter Chapter @relation(fields: [ChapterId],references: [id])
-  QandA QandA_quiz[]
+  Chapter   Chapter      @relation(fields: [ChapterId], references: [id])
+  QandA     QandA_quiz[]
 }
+
 model QandA_quiz {
-  id Int @id
+  id       Int    @id
   Question String
-  Option1 String
-  Option2 String
-  Option3 String
-  Option4 String
-  Answer String
-  QuizId Int
-  Quiz Quiz @relation(fields: [QuizId],references: [id])
+  Option1  String
+  Option2  String
+  Option3  String
+  Option4  String
+  Answer   String
+  QuizId   Int
+  Quiz     Quiz   @relation(fields: [QuizId], references: [id])
 }
+
 model Topic {
-  id Int @id @default(autoincrement())
+  id   Int    @id @default(autoincrement())
   name String
 
   ChapterId Int
-  Chapter Chapter @relation(fields: [ChapterId],references: [id])
-  QandA QandA[]
+  Chapter   Chapter @relation(fields: [ChapterId], references: [id])
+  QandA     QandA[]
 }
+
 model QandA {
-  id Int @id
+  id       Int    @id
   Question String
-  Option1 String
-  Option2 String
-  Option3 String
-  Option4 String
-  Answer String
-  TopicId Int
-  Topic Topic @relation(fields: [TopicId],references: [id])
+  Option1  String
+  Option2  String
+  Option3  String
+  Option4  String
+  Answer   String
+  TopicId  Int
+  Topic    Topic  @relation(fields: [TopicId], references: [id])
 }
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/prisma"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
