@@ -1,12 +1,18 @@
+// Import needed packages
 import { PrismaClient } from '@prisma/client'
 import { PrismaLibSql } from '@prisma/adapter-libsql'
+// You can alternatively use the web version of the client if you're running in
+// a constrained environment where the standard libsql client doesn't work:
+// import { PrismaLibSql } from '@prisma/adapter-libsql/web'
 
+// Setup
+const connectionString = `${process.env.TURSO_DATABASE_URL}`
+const authToken = `${process.env.TURSO_AUTH_TOKEN}`
+
+// Init prisma client
 const adapter = new PrismaLibSql({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN!,
+  url: connectionString,
+  authToken,
 })
-
-// Cast to 'any' or the specific internal type if the IDE is being stubborn
-const prisma = new PrismaClient({ adapter } as any) 
-
+const prisma = new PrismaClient({ adapter })
 export default prisma
