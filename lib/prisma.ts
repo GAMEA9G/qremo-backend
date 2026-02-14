@@ -1,9 +1,12 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaLibSql } from '@prisma/adapter-libsql'
 
-const prisma = new PrismaClient()
+const adapter = new PrismaLibSql({
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN!,
+})
 
-const globalForPrisma = global as unknown as { prisma: typeof prisma }
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// Cast to 'any' or the specific internal type if the IDE is being stubborn
+const prisma = new PrismaClient({ adapter } as any) 
 
 export default prisma

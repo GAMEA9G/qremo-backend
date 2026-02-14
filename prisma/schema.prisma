@@ -82,11 +82,11 @@ model QandA {
   Topic    Topic  @relation(fields: [TopicId], references: [id])
 }
 
+// prisma/schema.prisma
 generator client {
-  provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
-
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"

@@ -10,6 +10,8 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
+    "@prisma/adapter-libsql": "^7.4.0",
     "@prisma/client": "6.5.0",
     "next": "15.2.8",
     "react": "19.0.0",
