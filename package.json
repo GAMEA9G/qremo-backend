@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",
-    "@prisma/adapter-libsql": "^7.4.0",
+    "@prisma/adapter-libsql": "^7.4.1",
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
     "@prisma/extension-accelerate": "^3.0.1",
     "dotenv": "^17.3.1",
+    "google-auth-library": "^9.14.1",
     "next": "15.2.8",
+    "next-auth": "^4.24.13",
     "pg": "^8.18.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"

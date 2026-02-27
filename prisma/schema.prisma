@@ -1,7 +1,14 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
 model User {
-  id    Int    @id @default(autoincrement())
+  id    String @id
   email String @unique
   name  String
 }
@@ -13,12 +20,11 @@ model Syllabus {
 }
 
 model Subjects {
-  id         Int    @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   name       String
   SyllabusId Int
-
-  Syllabus Syllabus  @relation(fields: [SyllabusId], references: [id])
-  Topic    Chapter[]
+  Topic      Chapter[]
+  Syllabus   Syllabus  @relation(fields: [SyllabusId], references: [id])
 }
 
 model Chapter {
@@ -26,9 +32,9 @@ model Chapter {
   name      String
   SubjectId Int
   Subjects  Subjects @relation(fields: [SubjectId], references: [id])
-  topic     Topic[]
-  quiz      Quiz[]
   notes     Notes[]
+  quiz      Quiz[]
+  topic     Topic[]
 }
 
 model Notes {
@@ -45,12 +51,12 @@ model Quiz {
   id        Int          @id @default(autoincrement())
   name      String
   ChapterId Int
-  Chapter   Chapter      @relation(fields: [ChapterId], references: [id])
   QandA     QandA_quiz[]
+  Chapter   Chapter      @relation(fields: [ChapterId], references: [id])
 }
 
 model QandA_quiz {
-  id       Int    @id
+  id       Int    @id @default(autoincrement())
   Question String
   Option1  String
   Option2  String
@@ -62,16 +68,15 @@ model QandA_quiz {
 }
 
 model Topic {
-  id   Int    @id @default(autoincrement())
-  name String
-
+  id        Int     @id @default(autoincrement())
+  name      String
   ChapterId Int
-  Chapter   Chapter @relation(fields: [ChapterId], references: [id])
   QandA     QandA[]
+  Chapter   Chapter @relation(fields: [ChapterId], references: [id])
 }
 
 model QandA {
-  id       Int    @id
+  id       Int    @id @default(autoincrement())
   Question String
   Option1  String
   Option2  String
@@ -80,13 +85,4 @@ model QandA {
   Answer   String
   TopicId  Int
   Topic    Topic  @relation(fields: [TopicId], references: [id])
-}
-
-// prisma/schema.prisma
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
-}
-datasource db {
-  provider = "sqlite"
 }
