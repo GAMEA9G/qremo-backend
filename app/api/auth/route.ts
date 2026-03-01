@@ -32,7 +32,14 @@ export async function POST(request: NextRequest) {
       
     })){
       const newUser =await prisma.user.create({data:{ id:userId,email:userEmail,name:userName}})
-      return NextResponse.json({message:"User Created Successfully",newUser})
+      return NextResponse.json({message:"User Created Successfully",newUser},{
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3036",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": "true",
+      },
+    })
    }
     
 
