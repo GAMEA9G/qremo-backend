@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, props: { params: Promise<{ QuizId: string }> }) {
