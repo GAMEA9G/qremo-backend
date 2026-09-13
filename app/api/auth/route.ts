@@ -41,6 +41,20 @@ export async function POST(request: NextRequest) {
       },
     })
    }
+   else {
+    const newUser = await prisma.user.findUnique({
+      where: { id: userId },
+      
+    })
+    return NextResponse.json({message:"User Created Successfully",newUser},{
+      headers: {
+        "Access-Control-Allow-Origin": "http://localhost:3036",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": "true",
+      },
+    }) 
+   }
     
 
   }
