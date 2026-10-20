@@ -1,40 +1,46 @@
 import prisma from "@/app/lib/prisma";
-import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server';
 import { createSession } from "@/app/lib/session";
 
-import {OAuth2Client} from 'google-auth-library';
+import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client();
-async function verifyIdToken(idToken: string | undefined){
-    const ticket = await client.verifyIdToken({
-      idToken: idToken,
-      audience: process.env.clientId,  
+async function verifyIdToken(idToken: string | undefined) {
+  if (!idToken) {
+    throw new Error("Missing Google ID token");
+  }
+  const ticket = await client.verifyIdToken({
+    idToken: idToken,
+    audience: process.env.clientId,
   });
   const payload = ticket.getPayload();
-  
+  if (!payload) {
+    throw new Error("Error getting payload");
+  }
   const userId = payload['sub'];
   const userEmail = payload['email'];
   const userName = payload['name'];
 
-  
-  return {userId,userEmail,userName}
+
+  return { userId, userEmail, userName }
 }
 export async function POST(request: NextRequest) {
-    const authorization = request.headers.get("Authorization");
+  const authorization = request.headers.get("Authorization");
 
   const idToken = authorization?.startsWith("Bearer ")
     ? authorization.slice(7)
-    : undefined;    const {userId,userEmail,userName}= await verifyIdToken(idToken)
-    
-    await createSession(userId)
-    
-    if (!await prisma.user.findUnique({
-      where: { id: userId },
-      
-    })){
-      const newUser =await prisma.user.create({data:{ id:userId,email:userEmail,name:userName}})
-      return NextResponse.json({message:"User Created Successfully",newUser},{
+    : undefined; const { userId, userEmail, userName } = await verifyIdToken(idToken)
+  if(!userId || !userEmail || !userName){
+    throw new Error("Error verifying IdToken");
+  }
+  await createSession(userId)
+
+  if (!await prisma.user.findUnique({
+    where: { id: userId },
+
+  })) {
+    const newUser = await prisma.user.create({ data: { id: userId, email: userEmail, name: userName } })
+    return NextResponse.json({ message: "User Created Successfully", newUser }, {
       headers: {
         "Access-Control-Allow-Origin": "http://localhost:3036",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -42,22 +48,22 @@ export async function POST(request: NextRequest) {
         "Access-Control-Allow-Credentials": "true",
       },
     })
-   }
-   else {
+  }
+  else {
     const newUser = await prisma.user.findUnique({
       where: { id: userId },
-      
+
     })
-    return NextResponse.json({message:"User Created Successfully",newUser},{
+    return NextResponse.json({ message: "User Created Successfully", newUser }, {
       headers: {
         "Access-Control-Allow-Origin": "http://localhost:3036",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Credentials": "true",
       },
-    }) 
-   }
-    
-
+    })
   }
-  
+
+
+}
+
