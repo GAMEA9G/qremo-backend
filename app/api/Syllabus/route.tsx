@@ -9,7 +9,8 @@ export async function GET() {
 
 
 
-  return Response.json(syllabus)
+  return NextResponse.json({message:"Listed all the Syllabus: ",syllabus},{status: 200})
+}
 }
 export async function POST(request: NextRequest){
     const data  =await request.json()

@@ -1,7 +1,7 @@
 import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, props: { params: Promise<{ ChapterId: string }> }) {
+export async function GET(props: { params: Promise<{ ChapterId: string }> }) {
   const params = await props.params;
   const id = await params.ChapterId;
   const notes = await prisma.notes.findMany({

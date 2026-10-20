@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server';
 import { createSession } from "@/app/lib/session";
 
-const {OAuth2Client} = require('google-auth-library');
+import {OAuth2Client} from 'google-auth-library';
 const client = new OAuth2Client();
 async function verifyIdToken(idToken: string | undefined){
     const ticket = await client.verifyIdToken({
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     const headersList =headers();
     const idToken = (await headersList).get('Authorization')?.split(' ')[1];
     const {userId,userEmail,userName}= await verifyIdToken(idToken)
-    const payload ={userId,userEmail,userName}
+    
     await createSession(userId)
     
     if (!await prisma.user.findUnique({
