@@ -21,9 +21,11 @@ async function verifyIdToken(idToken: string | undefined){
   return {userId,userEmail,userName}
 }
 export async function POST(request: NextRequest) {
-    const headersList =headers();
-    const idToken = (await headersList).get('Authorization')?.split(' ')[1];
-    const {userId,userEmail,userName}= await verifyIdToken(idToken)
+    const authorization = request.headers.get("Authorization");
+
+  const idToken = authorization?.startsWith("Bearer ")
+    ? authorization.slice(7)
+    : undefined;    const {userId,userEmail,userName}= await verifyIdToken(idToken)
     
     await createSession(userId)
     
