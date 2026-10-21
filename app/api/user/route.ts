@@ -2,6 +2,17 @@ import prisma from "@/app/lib/prisma";
 import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server';
 
+export async function POST(request: NextRequest){
+    const data  =await request.json()
+    const {userId,SyllabusId } = data ;
+    console.log(data)
+    const user = await prisma.user.update({
+    where: {id:userId},data:{
+      syllabusId: SyllabusId
+    }
+    })
+    return NextResponse.json({message:"Added syllabus to user: ",user},{status: 200})
+}
 export async function DELETE(request: NextRequest){
     const data  =await request.json()
     const {id } = data ;
